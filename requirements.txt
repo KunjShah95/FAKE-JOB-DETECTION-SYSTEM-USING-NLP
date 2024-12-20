@@ -1,0 +1,3 @@
+pip install flask
+pip install -U flask-cors
+pip install pandas numpy scikit-learn  re pickle metplotlib seaborn nltk/spacy 

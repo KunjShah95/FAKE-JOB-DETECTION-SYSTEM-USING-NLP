@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fake Job Detection System</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f9;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      .container {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        width: 400px;
+      }
+
+      h1 {
+        font-size: 1.8rem;
+        color: #333333;
+        text-align: center;
+      }
+
+      label {
+        font-weight: bold;
+        color: #555555;
+      }
+
+      input,
+      textarea,
+      button {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #dddddd;
+        border-radius: 4px;
+        box-sizing: border-box;
+      }
+
+      button {
+        background-color: #5cb85c;
+        color: white;
+        font-size: 1rem;
+        border: none;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background-color: #4cae4c;
+      }
+
+      .result {
+        margin-top: 20px;
+        padding: 10px;
+        text-align: center;
+        border-radius: 4px;
+      }
+
+      .result.fake {
+        background-color: #f8d7da;
+        color: #721c24;
+      }
+
+      .result.real {
+        background-color: #d4edda;
+        color: #155724;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Fake Job Detection</h1>
+      <form id="jobForm">
+        <label for="title">Job Title:</label>
+        <input
+          type="text"
+          id="title"
+          name="title"
+          placeholder="Enter job title"
+          required
+        />
+
+        <label for="description">Job Description:</label>
+        <textarea
+          id="description"
+          name="description"
+          rows="4"
+          placeholder="Enter job description"
+          required
+        ></textarea>
+
+        <button type="submit">Check</button>
+      </form>
+
+      <div id="result" class="result" style="display: none"></div>
+    </div>
+
+    <script>
+      const form = document.getElementById("jobForm");
+      const resultDiv = document.getElementById("result");
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        // Get form data
+        const title = document.getElementById("title").value;
+        const description = document.getElementById("description").value;
+
+        // Send data to backend
+        const response = await fetch("http://127.0.0.1:5000/predict", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ title, description }),
+        });
+
+        // Handle response
+        const data = await response.json();
+        const prediction = data.prediction;
+
+        // Show result
+        resultDiv.style.display = "block";
+        resultDiv.textContent = `The job posting is predicted to be: ${prediction}`;
+        resultDiv.className = `result ${prediction.toLowerCase()}`;
+      });
+    </script>
+  </body>
+</html>
